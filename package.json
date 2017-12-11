@@ -4,7 +4,7 @@
   "description": "The application is a food / recipe application that will help users\r become better at cooking.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./server.js", //change to node ./server.js if hosting in cloud (e.g. Azure)
+    "start": "nodemon ./server.js",
     "webpack": "./node_modules/.bin/webpack -w",
     "test": "jest"
   },
@@ -13,6 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.2",
+    "mongodb": "^3.0.0-rc0",
+    "mongoose": "^4.13.6",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
