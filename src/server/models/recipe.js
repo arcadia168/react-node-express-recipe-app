@@ -17,4 +17,4 @@ var recipeSchema = new mongoose.Schema({
     image: String
 })
 
-module.exports = mongoose.model('Book', recipeSchema);
+module.exports = mongoose.model('Recipe', recipeSchema);
