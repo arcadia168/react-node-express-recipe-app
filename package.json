@@ -4,9 +4,9 @@
   "description": "The application is a food / recipe application that will help users\r become better at cooking.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/server/index.js",
+    "start": "nodemon ./server.js", //change to node ./server.js if hosting in cloud (e.g. Azure)
     "webpack": "./node_modules/.bin/webpack -w",
-    "test": "mocha --compilers babel-core/register ./test/*test.js"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
