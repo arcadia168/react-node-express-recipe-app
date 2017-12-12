@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import { RecipesService } from '../services/recipesService.js'
 import axios from 'axios';
 
 class App extends Component {
@@ -7,34 +6,34 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      recipes: []
+      recipes: [],
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     //make api request for recipes
 
     //TODO: get call working using a service class
-    // RecipesService.getRecipes.then((recipes) => {
-    //   this.setState({
-    //     recipes : recipes
-    //   })
-    // });
-
-    axios.get('api/recipes')
-      .then((response) => {
-
-        this.setState({
-          recipes: response.data
-        });
+    this.props.RecipeService.getRecipes().then((recipes) => {
+      this.setState({
+        recipes : recipes
       })
-      .catch((error) => {
-        console.log(error);
+    });
 
-        //TODO: handle this or log some telemtry in prod etc.
+    // axios.get('api/recipes')
+    //   .then((response) => {
 
-        throw error;
-      });
+    //     this.setState({
+    //       recipes: response.data
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+
+    //     //TODO: handle this or log some telemtry in prod etc.
+
+    //     throw error;
+    //   });
   }
 
   render() {
