@@ -1,11 +1,11 @@
-import React from 'react';
-import { render } from 'react-dom';
-import App from './components/App.jsx';
-import RecipeService from './services/recipeService.js'
+import ReactDOM from 'react-dom';
+import './scss/application.scss';
+// import 'bootstrap/dist/css/bootstrap.css';
+import { makeMainRoutes } from './components/routes.js';
 
-import styles from './scss/application.scss';
+const routes = makeMainRoutes();
 
-render(
-  <App RecipeService={new RecipeService()}/>,
+ReactDOM.render(
+  routes,
   document.getElementById('root')
 );
