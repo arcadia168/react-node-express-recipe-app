@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { Navbar, Button } from 'react-bootstrap';
+import '../scss/application.scss';
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -10,39 +10,61 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    //make api request for recipes
+  goTo(route) {
+    this.props.history.replace(`/${route}`)
+  }
 
-    //TODO: get call working using a service class
-    this.props.RecipeService.getRecipes().then((recipes) => {
-      this.setState({
-        recipes : recipes
-      })
-    });
+  login() {
+    this.props.auth.login();
+  }
 
-    // axios.get('api/recipes')
-    //   .then((response) => {
-
-    //     this.setState({
-    //       recipes: response.data
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-
-    //     //TODO: handle this or log some telemtry in prod etc.
-
-    //     throw error;
-    //   });
+  logout() {
+    this.props.auth.logout();
   }
 
   render() {
-
+    const { isAuthenticated } = this.props.auth;
     const recipeList = this.state.recipes;
 
-    return <div>Hello World, here are my recipes: {recipeList.map((recipe, index, recipes) => {
-        return <h1 key={index}>{recipe.name}</h1>
-      })}</div>;
+    return (
+      <div>
+        <Navbar fluid>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <a href="#">Auth0 - React</a>
+            </Navbar.Brand>
+            <Button
+              bsStyle="primary"
+              className="btn-margin"
+              onClick={this.goTo.bind(this, 'home')}
+            >
+              Home
+            </Button>
+            {
+              !isAuthenticated() && (
+                <Button
+                  bsStyle="primary"
+                  className="btn-margin"
+                  onClick={this.login.bind(this)}
+                >
+                  Log In
+                  </Button>
+              )
+            }
+            {
+              isAuthenticated() && (
+                <Button
+                  bsStyle="primary"
+                  className="btn-margin"
+                  onClick={this.logout.bind(this)}
+                >
+                  Log Out
+                  </Button>
+              )
+            }
+          </Navbar.Header>
+        </Navbar>
+      </div>);
   }
 }
 
