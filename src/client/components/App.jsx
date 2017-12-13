@@ -22,6 +22,10 @@ class App extends Component {
     this.props.auth.logout();
   }
 
+  getUserProfile() {
+    this.props.auth.getUserProfile();
+  }
+
   render() {
     const { isAuthenticated } = this.props.auth;
     const recipeList = this.state.recipes;
@@ -59,6 +63,16 @@ class App extends Component {
                   onClick={this.logout.bind(this)}
                 >
                   Log Out
+                  </Button>
+              )
+            }
+            {
+              isAuthenticated() && (
+                <Button
+                  bsStyle="primary"
+                  className="btn-margin"
+                  onClick={this.getUserProfile.bind(this)}>
+                  Get User Profile
                   </Button>
               )
             }
