@@ -6,7 +6,6 @@ import Callback from './Callback/Callback.jsx';
 import Auth from './Auth/Auth';
 import history from './history';
 import RecipeService from '../services/RecipeService';
-
 const auth = new Auth();
 
 const handleAuthentication = (nextState, replace) => {

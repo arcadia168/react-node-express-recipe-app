@@ -1,5 +1,6 @@
 import auth0 from 'auth0-js';
 import history from '../history'
+import axios from 'axios';
 
 class Auth {
     constructor() {
@@ -7,11 +8,13 @@ class Auth {
             domain: 'bennawazcodedemos.eu.auth0.com',
             clientID: 'B5bvppKVgfaM8cj3eukBOhoShRq0eBBE',
             redirectUri: 'http://localhost:3000/callback',
-            audience: 'https://bennawazcodedemos.eu.auth0.com/userinfo',
+            audience: 'react-node-recipes-auth-api',
             responseType: 'token id_token',
-            scope: 'openid'
+            scope: 'openid profile email'
         });
 
+        debugger;
+        this.userProfile = undefined;
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
         this.handleAuthentication = this.handleAuthentication.bind(this);
@@ -30,12 +33,32 @@ class Auth {
         });
     }
 
+    getUserProfile() {
+        if (!this.userProfile) {
+            var accessToken = localStorage.getItem('access_token');
+
+            if (!accessToken) {
+                console.log('Access token must exist to fetch profile');
+            }
+
+            this.auth0.client.userInfo(accessToken, (err, profile) => {
+                if (profile) {
+                    this.userProfile = profile;
+                }
+            });
+        } else {
+            return this.userProfile;
+        }
+    }
+
     setSession(authResult) {
         // Set the time that the access token will expire at
         let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
         localStorage.setItem('access_token', authResult.accessToken);
         localStorage.setItem('id_token', authResult.idToken);
         localStorage.setItem('expires_at', expiresAt);
+        //set the axios service to use this auth header
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;        
         // navigate to the home route
         history.replace('/home');
     }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { Navbar, Button } from 'react-bootstrap';
 import '../../scss/application.scss';
 
@@ -24,11 +23,16 @@ class Home extends Component {
 
     render() {
         const recipeList = this.state.recipes;
-        return <div>Hello World, here are my recipes: {recipeList.map((recipe, index, recipes) => {
-            return <h1 key={index}>{recipe.name}</h1>
-        })
-        }</div >;
+
+        if (recipeList) {
+            return <div>Hello World, here are my recipes: {recipeList.map((recipe, index, recipes) => {
+                return <h1 key={index}>{recipe.name}</h1>
+            })}
+            </div >;
+        }
+        else {
+            return <div>Nothing to see here!</div>
+        }
     }
 }
-
 module.exports = Home;
