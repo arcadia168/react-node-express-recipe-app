@@ -8,8 +8,23 @@ var methodOverride = require('method-override');
 var mongoose = require('mongoose');
 var http = require('http');
 var _ = require('underscore');
+var jwt = require('express-jwt');
+var jwks = require('jwks-rsa');
 
 // configuration ===========================================
+
+var jwtCheck = jwt({
+    secret: jwks.expressJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: "https://***REMOVED***codedemos.eu.auth0.com/.well-known/jwks.json"
+    }),
+    audience: 'react-node-recipes-auth-api',
+    issuer: "https://***REMOVED***codedemos.eu.auth0.com/",
+    algorithms: ['RS256'],
+    credentialsRequired: false
+})
 
 // config files
 var db = require('./config/db');
@@ -39,6 +54,7 @@ app.use(bodyParser.urlencoded({
 app.use(methodOverride('X-HTTP-Method-Override'));
 
 // set the static files location e.g. /public/img will be /img for users
+app.use(jwtCheck);
 app.use(express.static(__dirname)); //serves index.html by default
 app.use('/callback', express.static(__dirname)); //serves index.html by default
 app.use('/home', express.static(__dirname)); //serves index.html by default

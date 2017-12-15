@@ -7,7 +7,7 @@ class RecipeService {
 
     //method to go and get recipes from API and return to react component.
     getRecipes() {
-        return axios.get('api/recipes').then((response) => {
+        return axios.get('/api/recipes').then((response) => {
             return response && response.data;
         });
     }
