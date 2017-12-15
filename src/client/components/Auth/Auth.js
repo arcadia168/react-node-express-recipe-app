@@ -51,14 +51,28 @@ class Auth {
         }
     }
 
+    updateUserProfile(user_profile) {
+        axios.post('/api/users', user_profile).then((updatedUserProfile) => {
+            //use the favourite recipes
+            console.log('User profile updated on backend API: ' + JSON.stringify(updatedUserProfile));
+            localStorage.setItem('user_profile', updatedUserProfile);
+        }).catch((error) => {
+            //log error
+            console.log(error);
+        });
+    }
+
     setSession(authResult) {
         // Set the time that the access token will expire at
         let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
         localStorage.setItem('access_token', authResult.accessToken);
         localStorage.setItem('id_token', authResult.idToken);
         localStorage.setItem('expires_at', expiresAt);
+        localStorage.setItem('user_profile', authResult.idTokenPayload);
         //set the axios service to use this auth header
-        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;        
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
+        //send the user profile to the backend and store/update it in the db
+        this.updateUserProfile(authResult.idTokenPayload);
         // navigate to the home route
         history.replace('/home');
     }
