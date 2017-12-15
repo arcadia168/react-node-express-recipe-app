@@ -1,13 +1,12 @@
  // grab the models we want to use
  var Recipe = require('./models/recipe');
+ var User = require('./models/user');
  var http = require('http');
 
  module.exports = function (app) {
 
      // server routes ===========================================================
      // handle things like api calls
-     // authentication routes
-
      app.get('/api/recipes', function (req, res) {
 
          //Query database for all recipes and return recipes.
@@ -22,22 +21,43 @@
          });
      });
 
+     //Route to post user data to the DB from Auth0
+     app.post('/api/users/', function (req, res) {
+         //Get user from params
+         var userToAddOrUpdate = req.body;
+
+         //Upsert the user data into MongoDB
+         User.findOneAndUpdate({
+             sub: userToAddOrUpdate.sub
+         }, userToAddOrUpdate, {
+             upsert: true,
+             new: true
+         }, function (err, doc) {
+             if (err) {
+                 console.error(JSON.stringify(err));
+                 return reject(err);
+             }
+
+             res.send(doc);
+         })
+     })
+
      //Route to return the favourite recipes of a given user.
      app.get('/api/users/:userid/favourites', function (req, res) {
 
          //get book id
-         var userId = req.params.title;
+         var sub = req.params.userid;
 
          User.findOne({
-             userId: userId //TODO: properly parse userId into Mongoose/Mongo ID
-         }, function (err, book) {
+             sub: userId //TODO: properly parse userId into Mongoose/Mongo ID
+         }, function (err, user) {
 
              // if there is an error retrieving, send the error. 
              // nothing after res.send(err) will execute
              if (err)
                  res.send(err);
 
-             res.json(book); // return all nerds in JSON format
+             res.json(user); // return all nerds in JSON format
          });
      });
 
@@ -53,18 +73,10 @@
 
      // frontend routes =========================================================
      // route to handle all requests
-     // examples:
-     //  app.get('*', function (req, res) {
-     //      res.sendfile('./public/views/index.html'); // load our public/index.html file
-     //  });
 
-     //  app.get('/js/appRoutes.js', function (req, res) {
-     //      res.sendfile('./public/js/appRoutes.js');
-     //  })
-
-     //  app.get('/js/app.js', function (req, res) {
-     //      res.sendfile('./public/js/app.js');
-     //  })
+     app.get('//appRoutes.js', function (req, res) {
+         res.sendfile('./public/js/appRoutes.js');
+     })
 
      //  app.get('/css/style.css', function (req, res) {
      //      res.sendfile('./public/css/style.css');
