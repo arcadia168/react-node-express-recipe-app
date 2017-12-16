@@ -1,8 +1,8 @@
 import auth0 from 'auth0-js';
-import history from '../history'
+import history from './HistoryService'
 import axios from 'axios';
 
-class Auth {
+class AuthService {
     constructor() {
         this.auth0 = new auth0.WebAuth({
             domain: 'bennawazcodedemos.eu.auth0.com',
@@ -13,7 +13,6 @@ class Auth {
             scope: 'openid profile email'
         });
 
-        debugger;
         this.userProfile = undefined;
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
@@ -22,12 +21,13 @@ class Auth {
     }
 
     handleAuthentication() {
+        debugger;
         this.auth0.parseHash((err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
                 this.setSession(authResult);
-                history.replace('/home');
+                history.replace('/');
             } else if (err) {
-                history.replace('/home');
+                history.replace('/');
                 console.log(err);
             }
         });
@@ -70,11 +70,12 @@ class Auth {
         localStorage.setItem('expires_at', expiresAt);
         localStorage.setItem('user_profile', authResult.idTokenPayload);
         //set the axios service to use this auth header
+        debugger;
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
         //send the user profile to the backend and store/update it in the db
         this.updateUserProfile(authResult.idTokenPayload);
         // navigate to the home route
-        history.replace('/home');
+        history.replace('/');
     }
 
     logout() {
@@ -83,7 +84,7 @@ class Auth {
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
         // navigate to the home route
-        history.replace('/home');
+        history.replace('/');
     }
 
     isAuthenticated() {
@@ -98,4 +99,4 @@ class Auth {
     }
 }
 
-module.exports = Auth;
+module.exports = AuthService;

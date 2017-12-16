@@ -10,15 +10,16 @@ class Home extends Component {
         };
     }
 
-    componentDidMount() {
-        //make api request for recipes
-
-        //TODO: get call working using a service class
-        this.props.RecipeService.getRecipes().then((recipes) => {
-            this.setState({
-                recipes: recipes
-            })
-        });
+    componentDidMount () {
+        debugger;
+        if (this.props.auth.isAuthenticated()) {
+            //then make a call for recipes
+            this.props.recipeService.getRecipes().then((recipes) => {
+                this.setState({
+                    recipes: recipes
+                })
+            });
+        }
     }
 
     render() {
