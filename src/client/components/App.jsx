@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, Button } from 'react-bootstrap';
 import '../scss/application.scss';
 import Home from './Home/Home.jsx'
+import history from '../services/HistoryService'
 
 class App extends Component {
   constructor(props) {
@@ -27,6 +28,11 @@ class App extends Component {
     this.props.auth.getUserProfile();
   }
 
+  componentDidMount() {
+    //redirect to home page after loading container page.
+    //history.replace('/home');
+  }
+
   render() {
     const { isAuthenticated } = this.props.auth;
     const recipeList = this.state.recipes;
@@ -38,15 +44,18 @@ class App extends Component {
             <Navbar.Brand>
               <a href="#">Auth0 - React</a>
             </Navbar.Brand>
+            <Button
+              bsStyle="primary"
+              className="btn-margin"
+              onClick={this.goTo.bind(this, 'home')}
+            >Home</Button>
             {
-               !isAuthenticated() && (
+              !isAuthenticated() && (
                 <Button
                   bsStyle="primary"
                   className="btn-margin"
                   onClick={this.login.bind(this)}
-                >
-                  Log In
-                  </Button>
+                >Log In</Button>
               )
             }
             {
@@ -55,9 +64,7 @@ class App extends Component {
                   bsStyle="primary"
                   className="btn-margin"
                   onClick={this.logout.bind(this)}
-                >
-                  Log Out
-                  </Button>
+                >Log Out</Button>
               )
             }
           </Navbar.Header>
