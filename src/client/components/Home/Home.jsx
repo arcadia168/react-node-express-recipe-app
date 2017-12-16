@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
+import RecipeListWithFilter from '../RecipeListWithFilter/RecipeListWithFilter.jsx';
 import '../../scss/application.scss';
 
 class Home extends Component {
@@ -23,10 +24,7 @@ class Home extends Component {
         const recipeList = this.state.recipes;
 
         if (recipeList) {
-            return <ListGroup>Hello World, here are my recipes: {recipeList.map((recipe, index, recipes) => {
-                return <ListGroupItem href={`/recipe/${recipe._id}`} header={recipe.name} key={index}>{recipe.cookingTime}{recipe.mainIngredients.join(', ')}</ListGroupItem>
-            })} 
-            </ListGroup>;
+            return <RecipeListWithFilter recipes={recipeList} />
         }
         else {
             return <div>Nothing to see here in HOME!</div>

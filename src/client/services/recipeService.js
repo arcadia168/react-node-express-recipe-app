@@ -24,7 +24,6 @@ class RecipeService {
 
     getRecipeById(recipeIdToFind) {
         //check if recipe already exists on client side, otherwise query api for it
-        debugger;
         //if the recipe did not already exist, query api for it.
         return this.axios.get(`/api/recipe/${recipeIdToFind}`)
             .then((retrievedRecipe) => {

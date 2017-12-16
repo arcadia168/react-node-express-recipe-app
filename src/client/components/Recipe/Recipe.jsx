@@ -31,7 +31,6 @@ class Recipe extends Component {
     //todo: Make call to server to toggle a favourite recipe 
 
     render() {
-        debugger;
         const recipe = this.state.recipe;
 
         //Render image, name, cooking time, ingredients.

@@ -11,7 +11,6 @@ import axios from 'axios';
 
 const axiosInstance = axios;
 axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
-debugger;
 const recipeService = new RecipeService(axiosInstance);
 const authInstance = new AuthService();
 
@@ -22,7 +21,6 @@ const handleAuthentication = (nextState, replace) => {
 }
 
 export const makeMainRoutes = () => {
-  debugger;
   return (
     <Router history={HistoryService} component={App}>
       <div>
