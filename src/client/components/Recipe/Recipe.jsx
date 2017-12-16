@@ -36,7 +36,15 @@ class Recipe extends Component {
 
         //Render image, name, cooking time, ingredients.
         if (this.state.recipe) {
-            return <div>{JSON.stringify(recipe)}</div>
+            return <div>
+                <img src={recipe.image} />
+                <div>{recipe.cookingTime}</div>
+                <div>
+                    {recipe.ingredients.map((ingredient, index) => {
+                        return <span key={index}>{ingredient.quantity}{ingredient.name}</span>
+                    })}
+                </div>
+            </div>
         } else if (this.state.error) {
             return <div>{this.state.error}</div>
         } else {
