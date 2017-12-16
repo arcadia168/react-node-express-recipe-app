@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, Button } from 'react-bootstrap';
 import '../scss/application.scss';
-import RecipeService from '../services/RecipeService';
 import Home from './Home/Home.jsx'
 
 class App extends Component {
@@ -63,7 +62,7 @@ class App extends Component {
             }
           </Navbar.Header>
         </Navbar>
-        <Home auth={this.props.auth} recipeService={new RecipeService(this.props.axios)} />
+        <Home auth={this.props.auth} recipeService={this.props.recipeService} />
       </div>);
   }
 }

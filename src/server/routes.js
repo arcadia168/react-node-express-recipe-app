@@ -22,6 +22,30 @@
          });
      });
 
+     //route to find a specific recipt using id
+     //TODO: test this route
+     app.get('/api/recipe/:recipe_id', function(req, res) {
+
+        var recipeId = req.params.recipe_id;
+
+        //TODO: Write test to ensure you can't pass an empty recipe_id
+        if (!recipeId) {
+            res.status(400);
+            res.send("You have not supplied a valid recipe_id parameter in the URL");
+        }
+
+        //Query the DB for the recipe
+        Recipe.findById(recipeId, function (err, recipe) {
+            if (err) {
+                res.status(503);
+                res.send(error);
+            }
+
+            //Otherwise return the recipe data
+            res.json(recipe);
+        });
+     })
+
      //Route to post user data to the DB from Auth0
      //const checkUpdateScopes = jwtAuthz([ 'update:users' ]);
      //checkJwt, checkUpdateScopes
@@ -38,7 +62,7 @@
          }, function (err, doc) {
              if (err) {
                  console.error(JSON.stringify(err));
-                 return reject(err);
+                 return res.send(err);
              }
 
              res.send(doc);
@@ -62,7 +86,7 @@
                  if (err)
                      res.send(err);
 
-                 res.json(user); // return all nerds in JSON format
+                 res.json(user.favouriteRecipes); // return all recip in JSON format
              })
      });
 

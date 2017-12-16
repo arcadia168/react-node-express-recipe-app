@@ -55,9 +55,10 @@ app.use(methodOverride('X-HTTP-Method-Override'));
 
 // set the static files location e.g. /public/img will be /img for users
 //statically serve client side files.
-//serves index.html by default, React router handles the rest.
+//serves index.html by default, React router handles the rest on the client side.
 app.use(express.static(__dirname)); 
 app.use('/callback', express.static(__dirname));
+app.use('/recipe/:recipe_id', express.static(__dirname));
 
 //for API routes, ensure users are authenticated
 //app.use(jwtCheck);
