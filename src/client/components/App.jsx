@@ -62,7 +62,6 @@ class App extends Component {
             }
           </Navbar.Header>
         </Navbar>
-        <Home auth={this.props.auth} recipeService={this.props.recipeService} />
       </div>);
   }
 }
