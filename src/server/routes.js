@@ -47,27 +47,84 @@
 
      //const checkGetScopes = jwtAuthz([ 'get:users' ]);
      //Route to return the favourite recipes of a given user.
-     app.get('/api/users/:userid/favourites', checkJwt, function (req, res) {
+     app.get('/api/users/:userId/favourites', checkJwt, function (req, res) {
 
-         //get book id
-         var sub = req.params.userid;
+         //get user id
+         var sub = req.params.userId;
 
          User.findOne({
-             sub: sub //TODO: properly parse userId into Mongoose/Mongo ID
-         }, function (err, user) {
+                 sub: sub //TODO: properly parse userId into Mongoose/Mongo ID
+             })
+             .populate('favouriteRecipes')
+             .exec(function (err, user) {
+                 // if there is an error retrieving, send the error. 
+                 // nothing after res.send(err) will execute
+                 if (err)
+                     res.send(err);
 
-             // if there is an error retrieving, send the error. 
-             // nothing after res.send(err) will execute
-             if (err)
-                 res.send(err);
-
-             res.json(user); // return all nerds in JSON format
-         });
+                 res.json(user); // return all nerds in JSON format
+             })
      });
 
      //route to post a favourite recipe for a given user
-     app.post('/api/users/:userid/favourites/:recipeid', checkJwt, function (req, res) {
+     app.post('/api/users/:userId/favourites/:recipeId', checkJwt, function (req, res) {
          //TODO: store a recipe here on a user
+         const recipeId = req.params.recipeId;
+         const userId = req.params.userId;
+
+         //find the recipe with this id
+         Recipe.findById(recipeId, function (err, foundRecipe) {
+             if (err) {
+                 res.send(err);
+             } else if (!foundRecipe) {
+                 res.status(404)
+                 res.send('No recipe with the id: ' + recipeId + ' was found');
+             }
+
+             //Otherwise find the user and append recipe id to favourites
+             User.findById(userId, function (err, foundUser) {
+                 if (err) {
+                     res.send(err);
+                 } else if (!foundUser) {
+                     res.status(404).end();
+                 }
+
+                 if (!foundUser.favouriteRecipes) {
+                     foundUser.favouriteRecipes = [foundRecipe._id];
+                 } else {
+
+                     //Add recipe to list if it doesn't already exist
+                     let recipeIsAlreadyFavourited = false;
+
+                     //Use for not forEach, so we can break out of it for efficiency
+                     for (let i = 0; i < foundUser.favouriteRecipes.length; i++) {
+                         if (foundUser.favouriteRecipes[i].toString() == foundRecipe._id.toString()) {
+                             recipeIsAlreadyFavourited = true;
+                             break;
+                         }
+                     }
+
+                     if (!recipeIsAlreadyFavourited) {
+                         foundUser.favouriteRecipes.push(foundRecipe._id);
+
+                         //Now update the found user.
+                         foundUser.save(function (err) {
+                             if (err) {
+                                 res.status(500);
+                                 res.send(err);
+                             } else {
+                                 //Say user updated
+                                 res.status(200);
+                                 res.send(`Favourite recipe ${recipeId} was successfully added to user ${userId}`);
+                             }
+                         });
+                     } else {
+                         res.status(200);
+                         res.send(`This recipe was already favourited by this user.`);
+                     }
+                 }
+             })
+         });
      });
 
      //route to delete a favourite recipe for a given user

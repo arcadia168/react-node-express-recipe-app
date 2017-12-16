@@ -21,7 +21,6 @@ class AuthService {
     }
 
     handleAuthentication() {
-        debugger;
         this.auth0.parseHash((err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
                 this.setSession(authResult);
@@ -70,7 +69,7 @@ class AuthService {
         localStorage.setItem('expires_at', expiresAt);
         localStorage.setItem('user_profile', authResult.idTokenPayload);
         //set the axios service to use this auth header
-        debugger;
+        ;
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
         //send the user profile to the backend and store/update it in the db
         this.updateUserProfile(authResult.idTokenPayload);
