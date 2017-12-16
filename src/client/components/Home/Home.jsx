@@ -29,7 +29,7 @@ class Home extends Component {
             </ListGroup>;
         }
         else {
-            return <div>Nothing to see here!</div>
+            return <div>Nothing to see here in HOME!</div>
         }
     }
 }

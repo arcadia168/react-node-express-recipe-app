@@ -14,7 +14,7 @@ class Recipe extends Component {
 
     //before mounting, check store for recipe
     componentWillMount() {
-        this.props.RecipeService.getRecipeById(this.state.recipe_id, true).then((recipe) => {
+        this.props.recipeService.getRecipeById(this.state.recipe_id, true).then((recipe) => {
             this.setState({
                 recipe: recipe
             });
@@ -31,7 +31,8 @@ class Recipe extends Component {
     //todo: Make call to server to toggle a favourite recipe 
 
     render() {
-        const recipe = this.props.recipe;
+        debugger;
+        const recipe = this.state.recipe;
 
         //Render image, name, cooking time, ingredients.
         if (this.state.recipe) {
@@ -39,7 +40,7 @@ class Recipe extends Component {
         } else if (this.state.error) {
             return <div>{this.state.error}</div>
         } else {
-            return <div>Nothing to see here!</div>
+            return <div>Nothing to see here in RECIPE!</div>
         }
     }
 }

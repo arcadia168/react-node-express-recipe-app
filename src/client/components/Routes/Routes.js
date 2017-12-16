@@ -1,6 +1,7 @@
+import React from 'react';
 import { Router, Route } from 'react-router-dom';
-import React, { Component } from 'react';
 import App from '../App.jsx';
+import Home from '../Home/Home.jsx';
 import Callback from '../Callback/Callback.jsx';
 import Recipe from '../Recipe/Recipe.jsx';
 import RecipeService from '../../services/RecipeService';
@@ -8,46 +9,31 @@ import HistoryService from '../../services/HistoryService';
 import AuthService from '../../services/AuthService';
 import axios from 'axios';
 
-class Routes extends Component {
-  constructor(props) {
-    super(props);
-    this.authInstance = new AuthService();
-    this.axiosInstance = axios;
-    this.axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
-    this.recipeService = new RecipeService(axiosInstance);
-    this.handleAuthentication = this.handleAuthentication.bind(this);
-  }
+const axiosInstance = axios;
+axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
+debugger;
+const recipeService = new RecipeService(axiosInstance);
+const authInstance = new AuthService();
 
-  handleAuthentication(nextState, replace) {
-    if (/access_token|id_token|error/.test(nextState.location.hash)) {
-      authInstance.handleAuthentication();
-    }
-  }
-
-  render() {
-    debugger;
-    return (
-      <Router history = {HistoryService} component={App}>
-        <div>
-          <Route path = "/" render={
-            (props) => {
-              return <App axios={this.axiosInstance} auth={this.authInstance} recipeService={recipeService}{ ...props}/>
-            }
-          }/>
-          <Route path = "/callback" render={
-            (props) => {
-              this.handleAuthentication(props);
-              return <Callback { ...props}/> 
-            }
-          }/> 
-          <Route path = "/recipe/:recipe_id" recipeService={this.recipeService} render={
-            (props) => {
-              return <Recipe { ...props}/>
-            }
-          }/>
-        </div>
-      </Router>
-    );
+const handleAuthentication = (nextState, replace) => {
+  if (/access_token|id_token|error/.test(nextState.location.hash)) {
+    authInstance.handleAuthentication();
   }
 }
-module.exports = Routes;
+
+export const makeMainRoutes = () => {
+  debugger;
+  return (
+    <Router history={HistoryService} component={App}>
+      <div>
+        <Route path="/" render={(props) => <App auth={authInstance} {...props}/>}/>
+        <Route path="/callback" render={(props) => {
+          handleAuthentication(props);
+          return <Callback {...props} /> 
+        }}/>
+        <Route path="/home" render={(props) => <Home auth={authInstance} recipeService={recipeService} />} />
+        <Route path="/recipe/:recipe_id" render={(props) => <Recipe axios={axiosInstance} recipeService={recipeService} {...props} />}/>
+      </div>
+    </Router>
+  );
+};
