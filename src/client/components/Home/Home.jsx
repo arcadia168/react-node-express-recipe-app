@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, Button } from 'react-bootstrap';
+import { ListGroup, ListGroupItem } from 'react-bootstrap';
 import '../../scss/application.scss';
 
 class Home extends Component {
@@ -12,7 +12,7 @@ class Home extends Component {
 
     componentDidMount() {
         //then make a call for recipes
-        this.props.recipeService.getRecipes().then((recipes) => {
+        this.props.recipeService.getRecipes(false).then((recipes) => {
             this.setState({
                 recipes: recipes
             })
@@ -23,10 +23,10 @@ class Home extends Component {
         const recipeList = this.state.recipes;
 
         if (recipeList) {
-            return <div>Hello World, here are my recipes: {recipeList.map((recipe, index, recipes) => {
-                return <h1 key={index}>{recipe.name}</h1>
-            })}
-            </div >;
+            return <ListGroup>Hello World, here are my recipes: {recipeList.map((recipe, index, recipes) => {
+                return <ListGroupItem href={`/recipe/${recipe._id}`} header={recipe.name} key={index}>{recipe.cookingTime}{recipe.mainIngredients.join(', ')}</ListGroupItem>
+            })} 
+            </ListGroup>;
         }
         else {
             return <div>Nothing to see here!</div>
