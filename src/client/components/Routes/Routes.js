@@ -20,14 +20,10 @@ export const makeMainRoutes = () => {
   return (
     <Router history={HistoryService} component={App}>
       <div>
-        <Route path="/" render={(props) => {
-          return <App axios={axiosInstance} auth={auth} {...props} />
-          }}/>
+        <Route path="/" render={(props) => <App axios={axiosInstance} auth={auth} {...props}/>}/>
         <Route path="/callback" render={(props) => {
-          debugger;
           handleAuthentication(props);
 
-          //call for recipes HERE.
           return <Callback {...props} /> 
         }}/>
       </div>
