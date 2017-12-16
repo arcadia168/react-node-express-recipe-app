@@ -23,7 +23,7 @@ var jwtCheck = jwt({
     audience: 'react-node-recipes-auth-api',
     issuer: "https://***REMOVED***codedemos.eu.auth0.com/",
     algorithms: ['RS256'],
-    credentialsRequired: false
+    //credentialsRequired: false
 })
 
 // config files
@@ -54,16 +54,16 @@ app.use(bodyParser.urlencoded({
 app.use(methodOverride('X-HTTP-Method-Override'));
 
 // set the static files location e.g. /public/img will be /img for users
-app.use(jwtCheck);
-
 //statically serve client side files.
 //serves index.html by default, React router handles the rest.
 app.use(express.static(__dirname)); 
 app.use('/callback', express.static(__dirname));
-app.use('/home', express.static(__dirname));
+
+//for API routes, ensure users are authenticated
+//app.use(jwtCheck);
 
 // routes ==================================================
-require('./src/server/routes')(app); // configure our routes
+require('./src/server/routes')(app, jwtCheck); // configure our routes
 
 // start app ===============================================
 // startup our app at http://localhost:8080

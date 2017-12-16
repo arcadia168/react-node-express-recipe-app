@@ -2,8 +2,9 @@
  var Recipe = require('./models/recipe');
  var User = require('./models/user');
  var http = require('http');
+ var jwtAuthz = require('express-jwt-authz');
 
- module.exports = function (app) {
+ module.exports = function (app, checkJwt) {
 
      // server routes ===========================================================
      // handle things like api calls
@@ -22,7 +23,9 @@
      });
 
      //Route to post user data to the DB from Auth0
-     app.post('/api/users/', function (req, res) {
+     //const checkUpdateScopes = jwtAuthz([ 'update:users' ]);
+     //checkJwt, checkUpdateScopes
+     app.post('/api/users/', checkJwt, function (req, res) {
          //Get user from params
          var userToAddOrUpdate = req.body;
 
@@ -42,14 +45,15 @@
          })
      })
 
+     //const checkGetScopes = jwtAuthz([ 'get:users' ]);
      //Route to return the favourite recipes of a given user.
-     app.get('/api/users/:userid/favourites', function (req, res) {
+     app.get('/api/users/:userid/favourites', checkJwt, function (req, res) {
 
          //get book id
          var sub = req.params.userid;
 
          User.findOne({
-             sub: userId //TODO: properly parse userId into Mongoose/Mongo ID
+             sub: sub //TODO: properly parse userId into Mongoose/Mongo ID
          }, function (err, user) {
 
              // if there is an error retrieving, send the error. 
@@ -62,21 +66,17 @@
      });
 
      //route to post a favourite recipe for a given user
-     app.post('/api/users/:userid/favourites/:recipeid', function (req, res) {
+     app.post('/api/users/:userid/favourites/:recipeid', checkJwt, function (req, res) {
          //TODO: store a recipe here on a user
      });
 
      //route to delete a favourite recipe for a given user
-     app.delete('/api/users/:userid/favourites/:recipeid', function (req, res) {
+     app.delete('/api/users/:userid/favourites/:recipeid', checkJwt, function (req, res) {
          //TODO: remove a favourite recipe here from a user
      });
 
      // frontend routes =========================================================
-     // route to handle all requests
-
-     app.get('//appRoutes.js', function (req, res) {
-         res.sendfile('./public/js/appRoutes.js');
-     })
+     // route to handle all request
 
      //  app.get('/css/style.css', function (req, res) {
      //      res.sendfile('./public/css/style.css');
