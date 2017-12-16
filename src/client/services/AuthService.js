@@ -24,9 +24,9 @@ class AuthService {
         this.auth0.parseHash((err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
                 this.setSession(authResult);
-                history.replace('/');
+                history.replace('/home');
             } else if (err) {
-                history.replace('/');
+                history.replace('/home');
                 console.log(err);
             }
         });
@@ -74,7 +74,7 @@ class AuthService {
         //send the user profile to the backend and store/update it in the db
         this.updateUserProfile(authResult.idTokenPayload);
         // navigate to the home route
-        history.replace('/');
+        history.replace('/home');
     }
 
     logout() {
@@ -83,7 +83,7 @@ class AuthService {
         localStorage.removeItem('id_token');
         localStorage.removeItem('expires_at');
         // navigate to the home route
-        history.replace('/');
+        history.replace('/home');
     }
 
     isAuthenticated() {
