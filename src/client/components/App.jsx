@@ -28,11 +28,6 @@ class App extends Component {
     this.props.auth.getUserProfile();
   }
 
-  componentDidMount() {
-    //redirect to home page after loading container page.
-    //history.replace('/home');
-  }
-
   render() {
     const { isAuthenticated } = this.props.auth;
     const recipeList = this.state.recipes;
