@@ -44,7 +44,6 @@ class AuthService {
     updateUserProfile(user_profile) {
         this.axios.post('/api/users', user_profile).then((updatedUserProfile) => {
             //use the favourite recipes
-            debugger;
             this.userProfile = updatedUserProfile.data;
             console.log('User profile updated on backend API: ' + JSON.stringify(this.userProfile));
         }).catch((error) => {
@@ -64,7 +63,6 @@ class AuthService {
         ;
         this.axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
         //send the user profile to the backend and store/update it in the db
-        debugger;
         this.updateUserProfile(authResult.idTokenPayload);
         // navigate to the home route
         history.replace('/home');

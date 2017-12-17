@@ -60,7 +60,6 @@ class RecipeListWithFilter extends Component {
             let storedUserProfile = this.props.auth.getUserProfile();
 
             //go and get favourites
-            debugger;
             this.props.recipeService.getUserFavourites(storedUserProfile.sub, true).then((favourites) => {
                 //if DIFFERENT to favourites on STATE
                 this.setState({
@@ -95,7 +94,6 @@ class RecipeListWithFilter extends Component {
                 //find recipe with correspongind id and mark as a favourite
                 for (let i = 0; i < this.state.recipes.length; i++) {
                     if (favouriteRecipe._id == this.state.recipes[i]._id) {
-                        debugger;
                         this.state.recipes[i]['isFavourite'] = true
                     }
                 }
@@ -114,14 +112,21 @@ class RecipeListWithFilter extends Component {
                     </InputGroup>
                     <ListGroup>
                         {recipeList.map((recipe, index, recipes) => {
-                            return <ListGroupItem href={`/recipe/${recipe._id}`} action tag='a' key={index}>
-                                <ListGroupItemHeading>{recipe.name}</ListGroupItemHeading>
+
+                            let favouriteButton = undefined;
+
+                            if (this.props.auth.isAuthenticated()) {
+                                recipe.isFavourite ?
+                                    favouriteButton = <Button onClick={() => { this.removeFavourite(recipe._id) }} color="primary">Unfavourite</Button>
+                                    : favouriteButton = <Button onClick={() => { this.addFavourite(recipe._id) }} color="primary">Mark as favourite</Button>
+
+                            }
+
+                            return <ListGroupItem key={index}>
+                                <ListGroupItemHeading href={`/recipe/${recipe._id}`}>{recipe.name}</ListGroupItemHeading>
                                 <ListGroupItemText>
                                     {recipe.cookingTime}{recipe.mainIngredients.join(', ')}
-                                    {recipe.isFavourite ?
-                                        <Button onClick={() => { this.removeFavourite(recipe._id) }} color="primary">Unfavourite</Button>
-                                        : <Button onClick={() => { this.addFavourite(recipe._id) }} color="primary">Mark as favourite</Button>
-                                    }
+                                    {favouriteButton}
                                 </ListGroupItemText>
                             </ListGroupItem>
                         })}
