@@ -1,17 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from 'App';
+import Home from 'Home';
 import HistoryService from 'HistoryService';
 import AuthService from 'AuthService';
+import RecipeService from 'RecipeService';
 import axios from 'axios';
 import renderer from 'react-test-renderer';
 const axiosInstance = axios;
+const recipeServiceInstance = new RecipeService(axiosInstance);
 const authInstance = new AuthService(axiosInstance);
 
-describe('App', () => {
+describe('Home', () => {
     it('renders correctly', () => {
         const tree = renderer
-          .create(<App auth={authInstance}/>)
+          .create(<Home axios={axiosInstance} recipeService={recipeServiceInstance} auth={authInstance}/>)
           .toJSON();
         expect(tree).toMatchSnapshot();
       });
