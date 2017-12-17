@@ -25,7 +25,8 @@ class RecipeListWithFilter extends Component {
             userFavourites: undefined,
             showOnlyFavourites: false,
             favouritesButtonActive: false,
-            searchButtonActive: false
+            searchButtonActive: false,
+            error: undefined
         };
         //this.filter = undefined;
         this.handleRecipeSearch = this.handleRecipeSearch.bind(this);
@@ -53,9 +54,6 @@ class RecipeListWithFilter extends Component {
                 recipes: this.props.recipes,
                 searchButtonActive: false,
             })
-
-            debugger;
-            this.refs.filterField.text = '';
         }
     }
 
@@ -77,7 +75,6 @@ class RecipeListWithFilter extends Component {
     componentDidMount() {
         //TODO: move this function to run when render has finished
         //retrieve user profile and find user favourites;
-        console.log('checking for favourites');
         if (this.props.auth.isAuthenticated()) {
             let storedUserProfile = this.props.auth.getUserProfile();
 
@@ -85,10 +82,14 @@ class RecipeListWithFilter extends Component {
             this.props.recipeService.getUserFavourites(storedUserProfile.sub, true).then((favourites) => {
                 //if DIFFERENT to favourites on STATE
                 this.setState({
-                    userFavourites: favourites
+                    userFavourites: favourites,
+                    error: undefined
                 });
             }).catch((error) => {
                 console.log('an error occurred retrieving user favourites');
+                this.setState({
+                    error: 'An error occurred retrieving favourites: ' + JSON.stringify(error)
+                });
             });
         }
     }
@@ -107,7 +108,6 @@ class RecipeListWithFilter extends Component {
     }
 
     addFavourite(recipeId) {
-        debugger;
         let userId = this.props.auth.getUserProfile().sub;
 
         //mark the recipe for this user as a favourite on the server.
@@ -115,12 +115,15 @@ class RecipeListWithFilter extends Component {
             this.props.recipeService.addFavouriteRecipeToUser(userId, recipeId)
                 .then((updatedUserFavourites) => {
                     this.setState({
-                        userFavourites: updatedUserFavourites
+                        userFavourites: updatedUserFavourites,
+                        error: undefined
                     });
                 })
                 .catch((error) => {
-                    consol.log(error);
-                    //TODO: show bootstrap notification
+                    console.log(error);
+                    this.setState({
+                        error: 'An error occurred when adding favourite: ' + JSON.stringify(error)
+                    });
                 })
         } else {
             //TODO: display notification to tell user this didn't happen
@@ -136,15 +139,16 @@ class RecipeListWithFilter extends Component {
             this.props.recipeService.removeFavouriteRecipeFromUser(userId, recipeId)
                 .then((updatedUserFavourites) => {
                     this.setState({
-                        userFavourites: updatedUserFavourites
+                        userFavourites: updatedUserFavourites,
+                        error: undefined
                     });
                 })
                 .catch((error) => {
                     console.log(error);
-                    //TODO: show bootstrap notification to tell user something went wrong.
+                    this.setState({
+                        error: 'An error occurred when retrieving favourite recipes: ' + JSON.stringify(error)
+                    })
                 })
-        } else {
-            //TODO: display notification to tell user this didn't happen
         }
     }
 
@@ -183,6 +187,8 @@ class RecipeListWithFilter extends Component {
         //Render image, name, cooking time, ingredients.
         return (
             <Container className="recipe-list-container">
+                {this.state.error ? <Alert color='danger'>{this.state.error}</Alert> : undefined}
+                {this.props.auth.isAuthenticated() ? undefined : <Alert color='info'>To save your favourite recipes for quicker access, please sign up or log in!</Alert>}
                 <Row>
                     <Col>
                         <InputGroup>
