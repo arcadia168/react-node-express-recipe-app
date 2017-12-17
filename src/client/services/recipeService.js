@@ -8,6 +8,8 @@ class RecipeService {
         this.searchMatchingRecipeIngredients = this.searchMatchingRecipeIngredients.bind(this);
         this.sortByKey = this.sortByKey.bind(this);
         this.compareRecipeLists = this.compareRecipeLists.bind(this);
+        this.addFavouriteRecipeToUser = this.addFavouriteRecipeToUser.bind(this);
+        this.removeFavouriteRecipeFromUser = this.removeFavouriteRecipeFromUser.bind(this);
     }
 
     compareRecipeLists(recipeList, otherRecipeList) {
@@ -64,6 +66,30 @@ class RecipeService {
         return recipe.ingredients.some((ingredient, index) => {
             return ingredient.name.toLowerCase().indexOf(filterTerm) > -1;
         });
+    }
+
+    addFavouriteRecipeToUser(userId, recipeId) {
+        return this.axios.post(`/api/users/${userId}/favourites/${recipeId}`)
+            .then((updatedUserFavourites) => {
+                //set the recipes on the state
+                return updatedUserFavourites.data.favouriteRecipes
+            })
+            .catch((error) => {
+                console.log('error when posting a new favourite.')
+                throw error;
+            })
+    }
+
+    removeFavouriteRecipeFromUser(userId, recipeId) {
+        return this.axios.delete(`/api/users/${userId}/favourites/${recipeId}`)
+            .then((updatedUserFavourites) => {
+                return updatedUserFavourites.data.favouriteRecipes
+            })
+            .catch((error) => {
+                //TODO: show bootstrap notification to tell user something went wrong.
+                console.log('error when reomving favourite')
+                throw error;
+            })
     }
 
     //method to go and get recipes from API and return to react component.

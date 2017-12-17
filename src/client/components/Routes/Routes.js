@@ -29,7 +29,7 @@ export const makeMainRoutes = () => {
           handleAuthentication(props);
           return <Callback {...props} /> 
         }}/>
-        <Route path="/home" render={(props) => <Home auth={authInstance} recipeService={recipeService} />} />
+        <Route path="/home" render={(props) => <Home axios={axiosInstance} auth={authInstance} recipeService={recipeService} />} />
         <Route path="/recipe/:recipe_id" render={(props) => <Recipe axios={axiosInstance} recipeService={recipeService} {...props} />}/>
       </div>
     </Router>
