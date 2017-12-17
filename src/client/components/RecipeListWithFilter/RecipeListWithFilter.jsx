@@ -78,23 +78,63 @@ class RecipeListWithFilter extends Component {
     }
 
     addFavourite(recipeId) {
-        return console.log('adding favourite');
+        debugger;
+        let userId = this.props.auth.getUserProfile().sub;
+
+        //mark the recipe for this user as a favourite on the server.
+        if (this.props.auth.isAuthenticated() && userId) {
+            this.props.recipeService.addFavouriteRecipeToUser(userId, recipeId)
+                .then((updatedUserFavourites) => {
+                    this.setState({
+                        userFavourites: updatedUserFavourites
+                    });
+                })
+                .catch((error) => {
+                    consol.log(error);
+                    //TODO: show bootstrap notification
+                })
+        } else {
+            //TODO: display notification to tell user this didn't happen
+        }
     }
 
     removeFavourite(recipeId) {
-        return console.log('removing favourite');
+        debugger;
+        let userId = this.props.auth.getUserProfile().sub;
+
+        //mark the recipe for this user as a favourite on the server.
+        if (this.props.auth.isAuthenticated() && userId) {
+            this.props.recipeService.removeFavouriteRecipeFromUser(userId, recipeId)
+                .then((updatedUserFavourites) => {
+                    this.setState({
+                        userFavourites: updatedUserFavourites
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                    //TODO: show bootstrap notification to tell user something went wrong.
+                })
+        } else {
+            //TODO: display notification to tell user this didn't happen
+        }
     }
 
     render() {
+        debugger;
         const recipeList = this.state.recipes;
 
         //map favourites onto list of available recipes.
         if (this.state.userFavourites) {
+
+            this.state.recipes.forEach((recipe, i) => {
+                this.state.recipes[i]['isFavourite'] = false;
+            });
+
             this.state.userFavourites.forEach((favouriteRecipe, index) => {
                 //find recipe with correspongind id and mark as a favourite
                 for (let i = 0; i < this.state.recipes.length; i++) {
                     if (favouriteRecipe._id == this.state.recipes[i]._id) {
-                        this.state.recipes[i]['isFavourite'] = true
+                        this.state.recipes[i]['isFavourite'] = true;
                     }
                 }
             });

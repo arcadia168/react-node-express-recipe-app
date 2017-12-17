@@ -2,7 +2,6 @@
  var Recipe = require('./models/recipe');
  var User = require('./models/user');
  var http = require('http');
- var jwtAuthz = require('express-jwt-authz');
 
  module.exports = function (app, checkJwt) {
 
@@ -24,31 +23,29 @@
 
      //route to find a specific recipt using id
      //TODO: test this route
-     app.get('/api/recipe/:recipe_id', function(req, res) {
+     app.get('/api/recipe/:recipeId', function (req, res) {
 
-        var recipeId = req.params.recipe_id;
+         var recipeId = req.params.recipeId;
 
-        //TODO: Write test to ensure you can't pass an empty recipe_id
-        if (!recipeId) {
-            res.status(400);
-            res.send("You have not supplied a valid recipe_id parameter in the URL");
-        }
+         //TODO: Write test to ensure you can't pass an empty recipe_id
+         if (!recipeId) {
+             res.status(400);
+             res.send("You have not supplied a valid recipe_id parameter in the URL");
+         }
 
-        //Query the DB for the recipe
-        Recipe.findById(recipeId, function (err, recipe) {
-            if (err) {
-                res.status(503);
-                res.send(error);
-            }
+         //Query the DB for the recipe
+         Recipe.findById(recipeId, function (err, recipe) {
+             if (err) {
+                 res.status(503);
+                 res.send(error);
+             }
 
-            //Otherwise return the recipe data
-            res.json(recipe);
-        });
+             //Otherwise return the recipe data
+             res.json(recipe);
+         });
      })
 
      //Route to post user data to the DB from Auth0
-     //const checkUpdateScopes = jwtAuthz([ 'update:users' ]);
-     //checkJwt, checkUpdateScopes
      app.post('/api/users/', checkJwt, function (req, res) {
          //Get user from params
          var userToAddOrUpdate = req.body;
@@ -92,7 +89,6 @@
 
      //route to post a favourite recipe for a given user
      app.post('/api/users/:userId/favourites/:recipeId', checkJwt, function (req, res) {
-         //TODO: store a recipe here on a user
          const recipeId = req.params.recipeId;
          const userId = req.params.userId;
 
@@ -106,60 +102,86 @@
              }
 
              //Otherwise find the user and append recipe id to favourites
-             User.findById(userId, function (err, foundUser) {
-                 if (err) {
-                     res.send(err);
-                 } else if (!foundUser) {
-                     res.status(404).end();
-                 }
+             User.findOne({
+                     sub: userId
+                 })
+                 .populate('favouriteRecipes')
+                 .exec(function (err, foundUser) {
+                     if (err) {
+                         res.send(err);
+                     } else if (!foundUser) {
+                         res.status(404).end();
+                     }
 
-                 if (!foundUser.favouriteRecipes) {
-                     foundUser.favouriteRecipes = [foundRecipe._id];
-                 } else {
+                     if (!foundUser.favouriteRecipes) {
+                         foundUser.favouriteRecipes = [foundRecipe._id];
+                     } else {
 
-                     //Add recipe to list if it doesn't already exist
-                     let recipeIsAlreadyFavourited = false;
+                         //Add recipe to list if it doesn't already exist
+                         let recipeIsAlreadyFavourited = false;
 
-                     //Use for not forEach, so we can break out of it for efficiency
-                     for (let i = 0; i < foundUser.favouriteRecipes.length; i++) {
-                         if (foundUser.favouriteRecipes[i].toString() == foundRecipe._id.toString()) {
-                             recipeIsAlreadyFavourited = true;
-                             break;
+                         //Use for not forEach, so we can break out of it for efficiency
+                         for (let i = 0; i < foundUser.favouriteRecipes.length; i++) {
+                             if (foundUser.favouriteRecipes[i]._id.toString() == foundRecipe._id.toString()) {
+                                 recipeIsAlreadyFavourited = true;
+                                 break;
+                             }
+                         }
+
+                         if (!recipeIsAlreadyFavourited) {
+                             foundUser.favouriteRecipes.push(foundRecipe._id);
+
+                             //Now update the found user.
+                             foundUser.save(function (err) {
+                                 if (err) {
+                                     res.status(500);
+                                     res.send(err);
+                                 } else {
+                                     //Say user updated
+                                     res.status(200);
+                                     res.json(foundUser);
+                                 }
+                             });
+                         } else {
+                             res.status(200);
+                             res.json(foundUser);
                          }
                      }
-
-                     if (!recipeIsAlreadyFavourited) {
-                         foundUser.favouriteRecipes.push(foundRecipe._id);
-
-                         //Now update the found user.
-                         foundUser.save(function (err) {
-                             if (err) {
-                                 res.status(500);
-                                 res.send(err);
-                             } else {
-                                 //Say user updated
-                                 res.status(200);
-                                 res.send(`Favourite recipe ${recipeId} was successfully added to user ${userId}`);
-                             }
-                         });
-                     } else {
-                         res.status(200);
-                         res.send(`This recipe was already favourited by this user.`);
-                     }
-                 }
-             })
+                 });
          });
      });
 
      //route to delete a favourite recipe for a given user
-     app.delete('/api/users/:userid/favourites/:recipeid', checkJwt, function (req, res) {
-         //TODO: remove a favourite recipe here from a user
+     app.delete('/api/users/:userId/favourites/:recipeId', checkJwt, function (req, res) {
+
+         var userId = req.params.userId;
+         var recipeId = req.params.recipeId;
+
+         User.findOne({
+                 sub: userId
+             })
+             .populate('favouriteRecipes')
+             .exec(function (err, foundUser) {
+                 //remove the recipe with the specified id and return updated favourites to client
+                 if (foundUser.favouriteRecipes) {
+                     for (let i = 0; i < foundUser.favouriteRecipes.length; i++) {
+                         if (foundUser.favouriteRecipes[i]._id == recipeId) {
+                             foundUser.favouriteRecipes.splice(i, 1);
+                         }
+                     }
+                 }
+
+                 //Now update the found user.
+                 foundUser.save(function (err) {
+                     if (err) {
+                         res.status(500);
+                         res.send(err);
+                     } else {
+                         //Say user updated
+                         res.status(200);
+                         res.json(foundUser);
+                     }
+                 });
+             });
      });
-
-     // frontend routes =========================================================
-     // route to handle all request
-
-     //  app.get('/css/style.css', function (req, res) {
-     //      res.sendfile('./public/css/style.css');
-     //  })
  };
