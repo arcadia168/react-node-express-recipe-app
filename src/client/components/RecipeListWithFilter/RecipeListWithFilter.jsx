@@ -25,15 +25,37 @@ class RecipeListWithFilter extends Component {
 
     handleClick() {
         console.log("value of input field : " + this.state.inputfield);
+
+        //Filter list based on filter value.
+        //if matches an ingredient or recipe name or cooking time, it's a match.
+        debugger;
+        var filteredRecipes = this.props.recipeService.filterRecipes(this.props.recipes, this.state.inputfield);
+
+        this.setState({
+            recipes: filteredRecipes
+        });
+    }
+
+    componentDidUpdate(previousProps, previousState) {
+        debugger;
+        //check if props have changed, otherwise do nothing.
+        if (!this.props.recipeService.compareRecipeLists(previousProps.recipes, this.props.recipes)) {
+            debugger;
+            this.setState({
+                recipes: this.props.recipes
+            });
+        }
     }
 
     updateInputValue(evt) {
-        this.state = { inputfield: evt.target.value };
+        this.setState({ 
+            inputfield: evt.target.value 
+        });
     }
 
     render() {
         debugger;
-        const recipeList = this.props.recipes;
+        const recipeList = this.state.recipes;
 
         //Render image, name, cooking time, ingredients.
         if (recipeList) {
@@ -42,7 +64,7 @@ class RecipeListWithFilter extends Component {
                     <InputGroup>
                         <Input onChange={this.updateInputValue} placeholder="Filter recipes here..." />
                         <InputGroupButton>
-                            <Button color="secondary" onClick={this.handleClick}>Search</Button>
+                            <Button className="glyphicon glyphicon-search" aria-hidden="true" color="secondary" onClick={this.handleClick}></Button>
                         </InputGroupButton>
                     </InputGroup>
                     <ListGroup>

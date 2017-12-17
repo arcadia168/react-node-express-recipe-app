@@ -24,7 +24,7 @@ class Home extends Component {
         const recipeList = this.state.recipes;
 
         if (recipeList) {
-            return <RecipeListWithFilter recipes={recipeList} />
+            return <RecipeListWithFilter recipeService={this.props.recipeService} recipes={recipeList} />
         }
         else {
             return <div>Nothing to see here in HOME!</div>
