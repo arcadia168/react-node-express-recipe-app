@@ -3,7 +3,7 @@ import history from './HistoryService'
 import axios from 'axios';
 
 class AuthService {
-    constructor() {
+    constructor(axios) {
         this.auth0 = new auth0.WebAuth({
             domain: '***REMOVED***codedemos.eu.auth0.com',
             clientID: 'B5bvppKVgfaM8cj3eukBOhoShRq0eBBE',
@@ -12,12 +12,13 @@ class AuthService {
             responseType: 'token id_token',
             scope: 'openid profile email'
         });
-
+        this.axios = axios;
         this.userProfile = undefined;
         this.login = this.login.bind(this);
         this.logout = this.logout.bind(this);
         this.handleAuthentication = this.handleAuthentication.bind(this);
         this.isAuthenticated = this.isAuthenticated.bind(this);
+        this.getUserProfile = this.getUserProfile.bind(this);
     }
 
     handleAuthentication() {
@@ -33,28 +34,19 @@ class AuthService {
     }
 
     getUserProfile() {
-        if (!this.userProfile) {
-            var accessToken = localStorage.getItem('access_token');
-
-            if (!accessToken) {
-                console.log('Access token must exist to fetch profile');
-            }
-
-            this.auth0.client.userInfo(accessToken, (err, profile) => {
-                if (profile) {
-                    this.userProfile = profile;
-                }
-            });
+        if (!this.isAuthenticated()) {
+            return null; //cannot get user profile if not authenticated
         } else {
-            return this.userProfile;
+            return JSON.parse(localStorage.getItem('user_profile'));
         }
     }
 
     updateUserProfile(user_profile) {
-        axios.post('/api/users', user_profile).then((updatedUserProfile) => {
+        this.axios.post('/api/users', user_profile).then((updatedUserProfile) => {
             //use the favourite recipes
+            this.userProfile = updatedUserProfile;
             console.log('User profile updated on backend API: ' + JSON.stringify(updatedUserProfile));
-            localStorage.setItem('user_profile', updatedUserProfile);
+            localStorage.setItem('user_profile', JSON.stringify(updatedUserProfile));
         }).catch((error) => {
             //log error
             console.log(error);
@@ -67,12 +59,12 @@ class AuthService {
         localStorage.setItem('access_token', authResult.accessToken);
         localStorage.setItem('id_token', authResult.idToken);
         localStorage.setItem('expires_at', expiresAt);
-        localStorage.setItem('user_profile', authResult.idTokenPayload);
+        localStorage.setItem('user_profile', JSON.stringify(authResult.idTokenPayload));
         //set the axios service to use this auth header
         ;
-        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
+        this.axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
         //send the user profile to the backend and store/update it in the db
-        this.updateUserProfile(authResult.idTokenPayload);
+        this.updateUserProfile(JSON.stringify(authResult.idTokenPayload));
         // navigate to the home route
         history.replace('/home');
     }

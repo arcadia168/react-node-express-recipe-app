@@ -24,10 +24,6 @@ class App extends Component {
     this.props.auth.logout();
   }
 
-  getUserProfile() {
-    this.props.auth.getUserProfile();
-  }
-
   render() {
     const { isAuthenticated } = this.props.auth;
     const recipeList = this.state.recipes;

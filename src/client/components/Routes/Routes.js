@@ -12,7 +12,7 @@ import axios from 'axios';
 const axiosInstance = axios;
 axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
 const recipeService = new RecipeService(axiosInstance);
-const authInstance = new AuthService();
+const authInstance = new AuthService(axiosInstance);
 
 const handleAuthentication = (nextState, replace) => {
   if (/access_token|id_token|error/.test(nextState.location.hash)) {
