@@ -12,7 +12,8 @@ import {
     Button,
     Container,
     Row,
-    Col
+    Col,
+    Alert
 } from 'reactstrap';
 
 class RecipeListWithFilter extends Component {
@@ -50,8 +51,11 @@ class RecipeListWithFilter extends Component {
             //show all recipes again.
             this.setState({
                 recipes: this.props.recipes,
-                searchButtonActive: false
+                searchButtonActive: false,
             })
+
+            debugger;
+            this.refs.filterField.text = '';
         }
     }
 
@@ -167,7 +171,6 @@ class RecipeListWithFilter extends Component {
 
         if (this.state.showOnlyFavourites) {
             //filter the non-favourites out of the copy of the recipe list, which is used for display
-            debugger;
             recipeList = recipeList.filter((recipe) => {
                 for (let i = 0; i < this.state.userFavourites.length; i++) {
                     if (this.state.userFavourites[i]._id === recipe._id) {
@@ -175,58 +178,61 @@ class RecipeListWithFilter extends Component {
                     }
                 }
             });
-            debugger;
         }
 
         //Render image, name, cooking time, ingredients.
-        if (recipeList) {
-            return (
-                <Container>
-                    <Row>
-                        <Col>
-                            <InputGroup>
-                                {this.props.auth.isAuthenticated() ? <InputGroupButton onClick={this.toggleFavourites} color="secondary">
-                                    {this.state.favouritesButtonActive ? 'Show All' : 'Show Favourites'}
-                                </InputGroupButton> : undefined}
-                                <Input onKeyPress={this.handleKeyPress} onChange={this.updateInputValue} placeholder="Filter recipes here..." />
-                                <InputGroupButton color="secondary" onClick={this.handleRecipeSearch}>
-                                    {this.state.searchButtonActive ? 'Clear Search': 'Search'}
-                                </InputGroupButton>
-                            </InputGroup>
-                        </Col>
-                    </Row>
-                    <br />
-                    <Row>
-                        <Col>
-                            <ListGroup>
-                                {recipeList.map((recipe, index, recipes) => {
+        return (
+            <Container className="recipe-list-container">
+                <Row>
+                    <Col>
+                        <InputGroup>
+                            {this.props.auth.isAuthenticated() ? <InputGroupButton onClick={this.toggleFavourites} color="secondary">
+                                {this.state.favouritesButtonActive ? 'Show All' : 'Show Starred Recipes'}
+                            </InputGroupButton> : undefined}
+                            <Input ref="filterField" onKeyPress={this.handleKeyPress} onChange={this.updateInputValue} placeholder="Filter recipes here..." />
+                            <InputGroupButton color="secondary" onClick={this.handleRecipeSearch}>
+                                {this.state.searchButtonActive ? 'Show All' : 'Search'}
+                            </InputGroupButton>
+                        </InputGroup>
+                    </Col>
+                </Row>
+                <br />
+                {recipeList ?
+                    recipeList.length > 0 ?
+                        <Row>
+                            <Col className="recipe-list">
+                                <ListGroup>
+                                    {recipeList.map((recipe, index, recipes) => {
 
-                                    let favouriteButton = undefined;
+                                        let favouriteButton = undefined;
 
-                                    if (this.props.auth.isAuthenticated()) {
-                                        recipe.isFavourite ?
-                                            favouriteButton = <Button onClick={() => { this.removeFavourite(recipe._id) }} color="danger" className="favourite-btn">Unfavourite</Button>
-                                            : favouriteButton = <Button onClick={() => { this.addFavourite(recipe._id) }} color="success" className="favourite-btn">Mark as favourite</Button>
-                                    }
+                                        if (this.props.auth.isAuthenticated()) {
+                                            recipe.isFavourite ?
+                                                favouriteButton = <Button onClick={() => { this.removeFavourite(recipe._id) }} color="danger" className="favourite-btn">Unstar Recipe</Button>
+                                                : favouriteButton = <Button onClick={() => { this.addFavourite(recipe._id) }} color="success" className="favourite-btn">Star Recipe</Button>
+                                        }
 
-                                    return <ListGroupItem key={index}>
-                                        <ListGroupItemHeading tag="a" href={`/recipe/${recipe._id}`}>{recipe.name}</ListGroupItemHeading>
-                                        <ListGroupItemText>
-                                            Cooking Time: {recipe.cookingTime} {favouriteButton}
-                                        </ListGroupItemText>
-                                        <ListGroupItemText>
-                                            Main Ingredients: {recipe.mainIngredients.join(', ')}
-                                        </ListGroupItemText>
-                                    </ListGroupItem>
-                                })}
-                            </ListGroup>
-                        </Col>
-                    </Row>
-                </Container>);
-        }
-        else {
-            return <div>Nothing to see here in HOME!</div>
-        }
+                                        return <ListGroupItem key={index}>
+                                            <ListGroupItemHeading tag="a" href={`/recipe/${recipe._id}`}>{recipe.name}</ListGroupItemHeading>
+                                            <ListGroupItemText className="recipe-list-cooking-time">
+                                                Cooking Time: {recipe.cookingTime} {favouriteButton}
+                                            </ListGroupItemText>
+                                            <ListGroupItemText>
+                                                Main Ingredients: {recipe.mainIngredients.join(', ')}
+                                            </ListGroupItemText>
+                                        </ListGroupItem>
+                                    })}
+                                </ListGroup>
+                            </Col>
+                        </Row>
+                        : this.state.showOnlyFavourites ?
+                            <Alert color='warning'>Sorry, you don't currently have any starred recipes, get started by starring recipes you like</Alert>
+                            : this.state.searchButtonActive ?
+                                <Alert color='warning'>Sorry, nothing matched your filter term</Alert>
+                                : <Alert color='warning'>Sorry, we currently have no recipes for you</Alert>
+                    : <Alert color='warning'>Sorry, we currently have no recipes for you</Alert>
+                }
+            </Container>);
     }
 }
 module.exports = RecipeListWithFilter;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../scss/application.scss';
-//import RecipeService from '../../services/RecipeService'
+import { Jumbotron, Container, Row, Col } from 'reactstrap';
 
 class Recipe extends Component {
     constructor(props) {
@@ -32,18 +32,30 @@ class Recipe extends Component {
 
     render() {
         const recipe = this.state.recipe;
-
+        debugger;
         //Render image, name, cooking time, ingredients.
         if (this.state.recipe) {
-            return <div>
-                <img src={recipe.image} />
-                <div>{recipe.cookingTime}</div>
-                <div>
-                    {recipe.ingredients.map((ingredient, index) => {
-                        return <span key={index}>{ingredient.quantity}{ingredient.name}</span>
-                    })}
-                </div>
-            </div>
+            return <Container>
+                <Row>
+                    <Col md="10" className="col-centered">
+                        <Jumbotron fluid>
+                            <Container fluid>
+                                <div>
+                                    <h1 className="display-5">{recipe.name}</h1>
+                                </div>
+                                <img className="recipe-img img-responsive" src={recipe.image} />
+                                <div className="recipe-cooking-time lead">Cooking Time: {recipe.cookingTime}</div>
+                                <div className="recipe-ingredients">
+                                    Ingredients: 
+                                    {recipe.ingredients.map((ingredient, index) => {
+                                        return <div key={index}>{ingredient.quantity} x {ingredient.name}</div>
+                                    })}
+                                </div>
+                            </Container>
+                        </Jumbotron>
+                    </Col>
+                </Row>
+            </Container>
         } else if (this.state.error) {
             return <div>{this.state.error}</div>
         } else {
