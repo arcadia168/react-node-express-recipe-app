@@ -99,12 +99,6 @@ class RecipeService {
                 //cache the recipes
                 return response && response.data;
             }
-        }).catch((error) => {
-            //if we are unauthorized, show login page
-            // if (error.response.status == '401') {
-            //     const auth = new AuthService();
-            //     auth.login();
-            // }
         });
     }
 
