@@ -8,7 +8,10 @@ import {
     InputGroup,
     InputGroupButton,
     Input,
-    Button
+    Button,
+    Container,
+    Row,
+    Col
 } from 'reactstrap';
 
 class RecipeListWithFilter extends Component {
@@ -143,34 +146,45 @@ class RecipeListWithFilter extends Component {
         //Render image, name, cooking time, ingredients.
         if (recipeList) {
             return (
-                <div>
-                    <InputGroup>
-                        <Input onKeyPress={this.handleKeyPress} onChange={this.updateInputValue} placeholder="Filter recipes here..." />
-                        <InputGroupButton>
-                            <Button className="glyphicon glyphicon-search" aria-hidden="true" color="secondary" onClick={this.handleClick}></Button>
-                        </InputGroupButton>
-                    </InputGroup>
-                    <ListGroup>
-                        {recipeList.map((recipe, index, recipes) => {
+                <Container>
+                    <Row>
+                        <Col>
+                            <InputGroup className="filter">
+                                <Input onKeyPress={this.handleKeyPress} onChange={this.updateInputValue} placeholder="Filter recipes here..." />
+                                <InputGroupButton>
+                                    <Button aria-hidden="true" color="secondary" onClick={this.handleClick}>Search</Button>
+                                </InputGroupButton>
+                            </InputGroup>
+                        </Col>
+                    </Row>
+                    <br />
+                    <Row>
+                        <Col>
+                            <ListGroup>
+                                {recipeList.map((recipe, index, recipes) => {
 
-                            let favouriteButton = undefined;
+                                    let favouriteButton = undefined;
 
-                            if (this.props.auth.isAuthenticated()) {
-                                recipe.isFavourite ?
-                                    favouriteButton = <Button onClick={() => { this.removeFavourite(recipe._id) }} color="primary">Unfavourite</Button>
-                                    : favouriteButton = <Button onClick={() => { this.addFavourite(recipe._id) }} color="primary">Mark as favourite</Button>
-                            }
+                                    if (this.props.auth.isAuthenticated()) {
+                                        recipe.isFavourite ?
+                                            favouriteButton = <Button onClick={() => { this.removeFavourite(recipe._id) }} size="lg" color="danger" className="pull-right">Unfavourite</Button>
+                                            : favouriteButton = <Button onClick={() => { this.addFavourite(recipe._id) }} size="lg" color="success" className="pull-right">Mark as favourite</Button>
+                                    }
 
-                            return <ListGroupItem key={index}>
-                                <ListGroupItemHeading href={`/recipe/${recipe._id}`}>{recipe.name}</ListGroupItemHeading>
-                                <ListGroupItemText>
-                                    {recipe.cookingTime}{recipe.mainIngredients.join(', ')}
-                                    {favouriteButton}
-                                </ListGroupItemText>
-                            </ListGroupItem>
-                        })}
-                    </ListGroup>
-                </div>);
+                                    return <ListGroupItem key={index}>
+                                        <ListGroupItemHeading tag="a" href={`/recipe/${recipe._id}`}>{recipe.name}</ListGroupItemHeading>
+                                        <ListGroupItemText>
+                                            Cooking Time: {recipe.cookingTime}
+                                        </ListGroupItemText>
+                                        <ListGroupItemText>
+                                            Main Ingredients: {recipe.mainIngredients.join(', ')}{favouriteButton}
+                                        </ListGroupItemText>
+                                    </ListGroupItem>
+                                })}
+                            </ListGroup>
+                        </Col>
+                    </Row>
+                </Container>);
         }
         else {
             return <div>Nothing to see here in HOME!</div>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, Button } from 'react-bootstrap';
+import { Nav, NavbarToggler, NavLink, Navbar, NavbarBrand, NavItem, Collapse, Button } from 'reactstrap';
 import '../scss/application.scss';
 import Home from './Home/Home.jsx'
 import history from '../services/HistoryService'
@@ -9,7 +9,15 @@ class App extends Component {
     super(props);
     this.state = {
       recipes: [],
+      isOpen: false
     };
+    this.toggle = this.toggle.bind(this);
+  }
+
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
   }
 
   goTo(route) {
@@ -31,37 +39,35 @@ class App extends Component {
 
     return (
       <div>
-        <Navbar fluid>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <a href="#">Auth0 - React</a>
-            </Navbar.Brand>
-            <Button
-              bsStyle="primary"
-              className="btn-margin"
-              onClick={this.goTo.bind(this, 'home')}
-            >Home</Button>
-            {
-              !isAuthenticated() && (
-                <Button
-                  bsStyle="primary"
-                  className="btn-margin"
-                  onClick={this.login.bind(this)}
-                >Log In</Button>
-              )
-            }
-            {
-              isAuthenticated() && (
-                <Button
-                  bsStyle="primary"
-                  className="btn-margin"
-                  onClick={this.logout.bind(this)}
-                >Log Out</Button>
-              )
-            }
-          </Navbar.Header>
+        <Navbar color="faded" light expand="xs">
+          <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
+            <Nav className="ml-auto" navbar>
+              <NavItem>
+                <NavLink href="/home">Home</NavLink>
+              </NavItem>
+              {
+                !isAuthenticated() && (
+                  <NavItem>
+                    <NavLink onClick={this.login.bind(this)}>
+                      Log In
+                    </NavLink>
+                  </NavItem>
+                )
+              }
+              {
+                isAuthenticated() && (
+                  <NavItem>
+                    <NavLink onClick={this.logout.bind(this)}>
+                      Log Out
+                    </NavLink>
+                  </NavItem>
+                )
+              }
+            </Nav>
+          </Collapse>
         </Navbar>
-      </div>);
+      </div >);
   }
 }
 

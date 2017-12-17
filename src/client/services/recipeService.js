@@ -53,7 +53,7 @@ class RecipeService {
             } else if (this.searchMatchingRecipeIngredients(recipe, filterTerm)) { //recipe ingredients
                 matchingRecipes.push(recipe);
                 //if cooking time is less than cooking time searched for
-            } else if (Number(recipe.cookingTime.substring(0, 2)) < Number(filterTerm.substring(0, 2))) {
+            } else if (Number(recipe.cookingTime.substring(0, 2)) <= Number(filterTerm.substring(0, 2))) {
                 matchingRecipes.push(recipe);
             }
         });
