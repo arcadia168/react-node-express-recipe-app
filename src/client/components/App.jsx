@@ -40,6 +40,9 @@ class App extends Component {
     return (
       <div>
         <Navbar color="faded" light expand="xs">
+          <NavbarBrand>
+            ***REMOVED*** ***REMOVED*** - Recipes App
+          </NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>

@@ -5,6 +5,7 @@ import {
     ListGroupItem,
     ListGroupItemHeading,
     ListGroupItemText,
+    InputGroupAddon,
     InputGroup,
     InputGroupButton,
     Input,
@@ -20,29 +21,43 @@ class RecipeListWithFilter extends Component {
         this.state = {
             recipes: this.props.recipes,
             inputField: undefined,
-            userFavourites: undefined
+            userFavourites: undefined,
+            showOnlyFavourites: false,
+            favouritesButtonActive: false,
+            searchButtonActive: false
         };
         //this.filter = undefined;
-        this.handleClick = this.handleClick.bind(this);
+        this.handleRecipeSearch = this.handleRecipeSearch.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
         this.addFavourite = this.addFavourite.bind(this);
         this.removeFavourite = this.removeFavourite.bind(this);
+        this.toggleFavourites = this.toggleFavourites.bind(this);
     }
 
-    handleClick() {
-        //Filter list based on filter value.
-        //if matches an ingredient or recipe name or cooking time, it's a match.
-        var filteredRecipes = this.props.recipeService.filterRecipes(this.props.recipes, this.state.inputfield);
+    handleRecipeSearch() {
+        debugger;
+        if (!this.state.searchButtonActive && this.state.inputfield) {
+            //Filter list based on filter value.
+            //if matches an ingredient or recipe name or cooking time, it's a match.
+            var filteredRecipes = this.props.recipeService.filterRecipes(this.props.recipes, this.state.inputfield);
 
-        this.setState({
-            recipes: filteredRecipes
-        });
+            this.setState({
+                recipes: filteredRecipes,
+                searchButtonActive: true
+            });
+        } else if (this.state.searchButtonActive) {
+            //show all recipes again.
+            this.setState({
+                recipes: this.props.recipes,
+                searchButtonActive: false
+            })
+        }
     }
 
     handleKeyPress(e) {
         if (e.key === 'Enter') {
-            this.handleClick();
+            this.handleRecipeSearch();
         }
     }
 
@@ -78,6 +93,13 @@ class RecipeListWithFilter extends Component {
         this.setState({
             inputfield: evt.target.value
         });
+    }
+
+    toggleFavourites() {
+        this.setState({
+            showOnlyFavourites: !this.state.showOnlyFavourites,
+            favouritesButtonActive: !this.state.favouritesButtonActive
+        })
     }
 
     addFavourite(recipeId) {
@@ -124,7 +146,7 @@ class RecipeListWithFilter extends Component {
 
     render() {
         debugger;
-        const recipeList = this.state.recipes;
+        let recipeList = this.state.recipes;
 
         //map favourites onto list of available recipes.
         if (this.state.userFavourites) {
@@ -143,16 +165,32 @@ class RecipeListWithFilter extends Component {
             });
         }
 
+        if (this.state.showOnlyFavourites) {
+            //filter the non-favourites out of the copy of the recipe list, which is used for display
+            debugger;
+            recipeList = recipeList.filter((recipe) => {
+                for (let i = 0; i < this.state.userFavourites.length; i++) {
+                    if (this.state.userFavourites[i]._id === recipe._id) {
+                        return true;
+                    }
+                }
+            });
+            debugger;
+        }
+
         //Render image, name, cooking time, ingredients.
         if (recipeList) {
             return (
                 <Container>
                     <Row>
                         <Col>
-                            <InputGroup className="filter">
+                            <InputGroup>
+                                {this.props.auth.isAuthenticated() ? <InputGroupButton onClick={this.toggleFavourites} color="secondary">
+                                    {this.state.favouritesButtonActive ? 'Show All' : 'Show Favourites'}
+                                </InputGroupButton> : undefined}
                                 <Input onKeyPress={this.handleKeyPress} onChange={this.updateInputValue} placeholder="Filter recipes here..." />
-                                <InputGroupButton>
-                                    <Button aria-hidden="true" color="secondary" onClick={this.handleClick}>Search</Button>
+                                <InputGroupButton color="secondary" onClick={this.handleRecipeSearch}>
+                                    {this.state.searchButtonActive ? 'Clear Search': 'Search'}
                                 </InputGroupButton>
                             </InputGroup>
                         </Col>
@@ -167,17 +205,17 @@ class RecipeListWithFilter extends Component {
 
                                     if (this.props.auth.isAuthenticated()) {
                                         recipe.isFavourite ?
-                                            favouriteButton = <Button onClick={() => { this.removeFavourite(recipe._id) }} size="lg" color="danger" className="pull-right">Unfavourite</Button>
-                                            : favouriteButton = <Button onClick={() => { this.addFavourite(recipe._id) }} size="lg" color="success" className="pull-right">Mark as favourite</Button>
+                                            favouriteButton = <Button onClick={() => { this.removeFavourite(recipe._id) }} color="danger" className="favourite-btn">Unfavourite</Button>
+                                            : favouriteButton = <Button onClick={() => { this.addFavourite(recipe._id) }} color="success" className="favourite-btn">Mark as favourite</Button>
                                     }
 
                                     return <ListGroupItem key={index}>
                                         <ListGroupItemHeading tag="a" href={`/recipe/${recipe._id}`}>{recipe.name}</ListGroupItemHeading>
                                         <ListGroupItemText>
-                                            Cooking Time: {recipe.cookingTime}
+                                            Cooking Time: {recipe.cookingTime} {favouriteButton}
                                         </ListGroupItemText>
                                         <ListGroupItemText>
-                                            Main Ingredients: {recipe.mainIngredients.join(', ')}{favouriteButton}
+                                            Main Ingredients: {recipe.mainIngredients.join(', ')}
                                         </ListGroupItemText>
                                     </ListGroupItem>
                                 })}
