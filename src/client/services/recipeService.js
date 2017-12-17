@@ -8,7 +8,6 @@ class RecipeService {
         this.searchMatchingRecipeIngredients = this.searchMatchingRecipeIngredients.bind(this);
         this.sortByKey = this.sortByKey.bind(this);
         this.compareRecipeLists = this.compareRecipeLists.bind(this);
-        this.compareUserFavourites = this.compareUserFavourites.bind(this);
     }
 
     compareRecipeLists(recipeList, otherRecipeList) {
@@ -85,7 +84,6 @@ class RecipeService {
 
     getUserFavourites(userId, usedCachedValues) {
 
-        debugger;
         if (this.favouriteRecipes && usedCachedValues) {
             return Promise.resolve(this.favouriteRecipes);
         };
@@ -99,11 +97,6 @@ class RecipeService {
                 console.log('An error occurred when retrieving user favourite recipes from the API: ' + error);
                 return null; //return an empty recipe
             });
-    }
-    
-    compareUserFavourites(userFavourites, otherUserFavourites){
-        debugger;
-        return JSON.stringify(userFavourites) === JSON.stringify(otherUserFavourites);
     }
 
     getRecipeById(recipeIdToFind) {

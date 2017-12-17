@@ -22,6 +22,7 @@ class App extends Component {
 
   logout() {
     this.props.auth.logout();
+    this.goTo('home');
   }
 
   render() {
