@@ -6,3 +6,36 @@
     position: absolute;
     right: 1rem;
 }
+
+.recipe-img {
+    width: 100%;
+    min-width: 300px;
+    max-width: 750x;
+    margin: auto;
+}
+
+.recipe-cooking-time {
+    margin-top: 1rem;
+}
+
+.recipe-ingredients {
+    margin-top: 1rem;
+}
+
+.recipe-list-container {
+    margin-bottom: 2rem !important;
+}
+
+.recipe-list-cooking-time {
+    margin-top: 1rem !important;
+}
+
+#root {
+    min-width: 470px;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+    min-width: 330px;
+}
