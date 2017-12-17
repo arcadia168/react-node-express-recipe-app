@@ -28,7 +28,6 @@ class RecipeListWithFilter extends Component {
             searchButtonActive: false,
             error: undefined
         };
-        //this.filter = undefined;
         this.handleRecipeSearch = this.handleRecipeSearch.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
@@ -38,7 +37,6 @@ class RecipeListWithFilter extends Component {
     }
 
     handleRecipeSearch() {
-        debugger;
         if (!this.state.searchButtonActive && this.state.inputfield) {
             //Filter list based on filter value.
             //if matches an ingredient or recipe name or cooking time, it's a match.
@@ -131,7 +129,6 @@ class RecipeListWithFilter extends Component {
     }
 
     removeFavourite(recipeId) {
-        debugger;
         let userId = this.props.auth.getUserProfile().sub;
 
         //mark the recipe for this user as a favourite on the server.
@@ -153,7 +150,6 @@ class RecipeListWithFilter extends Component {
     }
 
     render() {
-        debugger;
         let recipeList = this.state.recipes;
 
         //map favourites onto list of available recipes.
