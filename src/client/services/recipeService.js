@@ -85,6 +85,7 @@ class RecipeService {
 
     getUserFavourites(userId, usedCachedValues) {
 
+        debugger;
         if (this.favouriteRecipes && usedCachedValues) {
             return Promise.resolve(this.favouriteRecipes);
         };
@@ -101,6 +102,7 @@ class RecipeService {
     }
     
     compareUserFavourites(userFavourites, otherUserFavourites){
+        debugger;
         return JSON.stringify(userFavourites) === JSON.stringify(otherUserFavourites);
     }
 

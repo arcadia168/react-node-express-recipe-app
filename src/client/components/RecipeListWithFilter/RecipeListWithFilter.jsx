@@ -23,6 +23,8 @@ class RecipeListWithFilter extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
+        this.addFavourite = this.addFavourite.bind(this);
+        this.removeFavourite = this.removeFavourite.bind(this);
     }
 
     handleClick() {
@@ -48,19 +50,22 @@ class RecipeListWithFilter extends Component {
                 recipes: this.props.recipes
             });
         }
+    }
 
+    componentDidMount() {
+        //TODO: move this function to run when render has finished
         //retrieve user profile and find user favourites;
+        console.log('checking for favourites');
         if (this.props.auth.isAuthenticated()) {
             let storedUserProfile = this.props.auth.getUserProfile();
 
             //go and get favourites
+            debugger;
             this.props.recipeService.getUserFavourites(storedUserProfile.sub, true).then((favourites) => {
                 //if DIFFERENT to favourites on STATE
-                if (!this.props.recipeService.compareUserFavourites(previousState.userFavourites, favourites)) {
-                    this.setState({
-                        userFavourites: favourites
-                    });
-                }
+                this.setState({
+                    userFavourites: favourites
+                });
             }).catch((error) => {
                 console.log('an error occurred retrieving user favourites');
             });
@@ -73,10 +78,16 @@ class RecipeListWithFilter extends Component {
         });
     }
 
+    addFavourite(recipeId) {
+        return console.log('adding favourite');
+    }
+
+    removeFavourite(recipeId) {
+        return console.log('removing favourite');
+    }
+
     render() {
         const recipeList = this.state.recipes;
-
-        console.log('user profile for recipe list is: ' + JSON.stringify(this.state.userProfile));
 
         //map favourites onto list of available recipes.
         if (this.state.userFavourites) {
@@ -103,19 +114,15 @@ class RecipeListWithFilter extends Component {
                     </InputGroup>
                     <ListGroup>
                         {recipeList.map((recipe, index, recipes) => {
-                            debugger;
-
-                            let starred = undefined;
-
-                            if (recipe.isFavourite === true) {
-                                starred = 'I LOVE THIS';
-                            } else if (recipe.isFavourite === false){
-                                starred = 'THIS IS OK';
-                            }
-
                             return <ListGroupItem href={`/recipe/${recipe._id}`} action tag='a' key={index}>
-                                <ListGroupItemHeading>{recipe.name}{starred}</ListGroupItemHeading>
-                                <ListGroupItemText>{recipe.cookingTime}{recipe.mainIngredients.join(', ')}</ListGroupItemText>
+                                <ListGroupItemHeading>{recipe.name}</ListGroupItemHeading>
+                                <ListGroupItemText>
+                                    {recipe.cookingTime}{recipe.mainIngredients.join(', ')}
+                                    {recipe.isFavourite ?
+                                        <Button onClick={() => { this.removeFavourite(recipe._id) }} color="primary">Unfavourite</Button>
+                                        : <Button onClick={() => { this.addFavourite(recipe._id) }} color="primary">Mark as favourite</Button>
+                                    }
+                                </ListGroupItemText>
                             </ListGroupItem>
                         })}
                     </ListGroup>
