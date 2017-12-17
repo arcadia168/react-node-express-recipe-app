@@ -20,12 +20,11 @@ class RecipeListWithFilter extends Component {
         };
         //this.filter = undefined;
         this.handleClick = this.handleClick.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
         this.updateInputValue = this.updateInputValue.bind(this);
     }
 
     handleClick() {
-        console.log("value of input field : " + this.state.inputfield);
-
         //Filter list based on filter value.
         //if matches an ingredient or recipe name or cooking time, it's a match.
         debugger;
@@ -34,6 +33,12 @@ class RecipeListWithFilter extends Component {
         this.setState({
             recipes: filteredRecipes
         });
+    }
+
+    handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            this.handleClick();
+        }
     }
 
     componentDidUpdate(previousProps, previousState) {
@@ -48,8 +53,8 @@ class RecipeListWithFilter extends Component {
     }
 
     updateInputValue(evt) {
-        this.setState({ 
-            inputfield: evt.target.value 
+        this.setState({
+            inputfield: evt.target.value
         });
     }
 
@@ -62,7 +67,7 @@ class RecipeListWithFilter extends Component {
             return (
                 <div>
                     <InputGroup>
-                        <Input onChange={this.updateInputValue} placeholder="Filter recipes here..." />
+                        <Input onKeyPress={this.handleKeyPress} onChange={this.updateInputValue} placeholder="Filter recipes here..." />
                         <InputGroupButton>
                             <Button className="glyphicon glyphicon-search" aria-hidden="true" color="secondary" onClick={this.handleClick}></Button>
                         </InputGroupButton>
