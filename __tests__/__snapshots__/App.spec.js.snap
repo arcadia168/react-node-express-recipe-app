@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App renders correctly 1`] = `
+<div>
+  <nav
+    className="navbar navbar-expand navbar-light bg-faded"
+  >
+    <a
+      className="navbar-brand"
+    >
+      ***REMOVED*** ***REMOVED*** - Recipes App
+    </a>
+    <button
+      className="navbar-toggler"
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        className="navbar-toggler-icon"
+      />
+    </button>
+    <div
+      className="collapse navbar-collapse"
+      style={Object {}}
+    >
+      <ul
+        className="ml-auto navbar-nav"
+      >
+        <li
+          className="nav-item"
+        >
+          <a
+            className="nav-link"
+            href="/home"
+            onClick={[Function]}
+          >
+            Home
+          </a>
+        </li>
+        <li
+          className="nav-item"
+        >
+          <a
+            className="nav-link"
+            onClick={[Function]}
+          >
+            Log In
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+`;

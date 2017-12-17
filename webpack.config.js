@@ -22,7 +22,8 @@ const config = {
       Home: './src/client/components/Home/Home.jsx',
       AuthService: './src/client/services/AuthService.js',
       HistoryService: './src/client/services/HistoryService.js',
-      RecipeService: './src/client/services/RecipeService.js'
+      RecipeService: './src/client/services/RecipeService.js',
+      Callback: './src/client/components/Callback/Callback.jsx'
     },
     extensions: ['', '.js', '.jsx']
   },
