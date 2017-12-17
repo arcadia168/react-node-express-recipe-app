@@ -119,7 +119,6 @@ class RecipeListWithFilter extends Component {
                                 recipe.isFavourite ?
                                     favouriteButton = <Button onClick={() => { this.removeFavourite(recipe._id) }} color="primary">Unfavourite</Button>
                                     : favouriteButton = <Button onClick={() => { this.addFavourite(recipe._id) }} color="primary">Mark as favourite</Button>
-
                             }
 
                             return <ListGroupItem key={index}>
