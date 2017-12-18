@@ -1,9 +1,12 @@
-# To use solution
+# The solution
 
-Run 'npm install'
-To run the server and app: 'npm start' and visit 'http://localhost:3000'
-To run client side tests: 'npm test'
-To run server side tests: 'mocha'
+See the solution running on Azure App Service: http://ben-nawaz-react-express-recipe-app.azurewebsites.net/home/
+
+Run the project locally:
+* Run 'npm install'
+* Run the server and app: 'npm start' and visit 'http://localhost:3000/home'
+* Run client side tests: 'npm test'
+* Run server side tests: 'mocha'
 
 # The challenge
 
