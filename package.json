@@ -4,7 +4,7 @@
   "description": "The application is a food / recipe application that will help users\r become better at cooking.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./server.js",
+    "start": "node ./server.js",
     "webpack": "./node_modules/.bin/webpack -w",
     "test": "jest --config jest.config.js"
   },
