@@ -32,7 +32,6 @@ class Recipe extends Component {
 
     render() {
         const recipe = this.state.recipe;
-        debugger;
         //Render image, name, cooking time, ingredients.
         if (this.state.recipe) {
             return <Container>
