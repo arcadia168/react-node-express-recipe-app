@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var mongoose = require('mongoose');
 var http = require('http');
-var _ = require('underscore');
 var jwt = require('express-jwt');
 var jwks = require('jwks-rsa');
 
