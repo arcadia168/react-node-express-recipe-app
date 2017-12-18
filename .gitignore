@@ -3,3 +3,5 @@ bower_comppnents
 npm-debug.log
 ##don't ignore node_modules if uploading to cloud hosting service
 ##don't ignore build/bundle.js if uploading to cloud hosting service
+node_modules
+build/bundle.js
