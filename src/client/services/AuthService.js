@@ -7,7 +7,7 @@ class AuthService {
         this.auth0 = new auth0.WebAuth({
             domain: 'bennawazcodedemos.eu.auth0.com',
             clientID: 'B5bvppKVgfaM8cj3eukBOhoShRq0eBBE',
-            redirectUri: 'http://localhost:3000/callback',
+            redirectUri: 'http://ben-nawaz-react-express-recipe-app.azurewebsites.net/callback',
             audience: 'react-node-recipes-auth-api',
             responseType: 'token id_token',
             scope: 'openid profile email'
