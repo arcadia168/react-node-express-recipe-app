@@ -55,4 +55,53 @@ describe('RecipeService', () => {
             expect(filteredRecipes[0].cookingTime).toEqual('25 minutes');
         })
     });
+
+    describe('searchMatchingRecipeIngredients', () => {
+        it('should return true when a recipe has a matching ingredient', () => {
+            //Arrange
+            let filterTerm = 'chicken';
+            let recipe = mockRecipes[0];
+
+            //Assert
+            let ingredientExistsCheckResult = recipeServiceInstance.searchMatchingRecipeIngredients(recipe, filterTerm);
+        
+            expect(ingredientExistsCheckResult).toBe(true);
+        })
+
+        it('should return false when a recipe does not contain the ingredient being searched for', () => {
+            let filterTerm = 'raisins';
+            let recipe = mockRecipes[0];
+
+            //Assert
+            let ingredientExistsCheckResult = recipeServiceInstance.searchMatchingRecipeIngredients(recipe, filterTerm);
+        
+            expect(ingredientExistsCheckResult).toBe(false);
+        })
+    })
+
+    describe('compareRecipeLists', () => {
+        it('should return true for an identical pair of recipe lists', () => {
+            //Arrange
+            let firstRecipeList = mockRecipes;
+            let comparisonRecipeList = mockRecipes;
+
+            //Act
+            let comparisonResult = recipeServiceInstance.compareRecipeLists(firstRecipeList, comparisonRecipeList);
+
+            //Assert
+            expect(comparisonResult).toBe(true);
+        })
+
+        it('should return false for an differing pair of recipe lists, based on length', () => {
+            //Arrange
+            let firstRecipeList = mockRecipes;
+            let comparisonRecipeList = ['test', 'test'];
+
+            //Act
+            let comparisonResult = recipeServiceInstance.compareRecipeLists(firstRecipeList, comparisonRecipeList);
+
+            //Assert
+            expect(comparisonResult).toBe(false);
+        })
+    })
 });
