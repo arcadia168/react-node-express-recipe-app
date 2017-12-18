@@ -1,7 +1,5 @@
 [{
-    "_id": {
-        "$oid": "5a2f14e3734d1d29323545e2"
-    },
+    "_id": "5a2f14e3734d1d29323545e2",
     "name": "Lemon Chicken",
     "cookingTime": "30 minutes",
     "mainIngredients": [
@@ -24,9 +22,7 @@
     ],
     "image": "http://assets.simplyrecipes.com/wp-content/uploads/2010/03/lemon-chicken-horiz-a-1600.jpg"
 }, {
-    "_id": {
-        "$oid": "5a2f150d734d1d29323545f9"
-    },
+    "_id": "5a2f150d734d1d29323545f9",
     "name": "Chicken Ceasar Salad",
     "cookingTime": "35 minutes",
     "mainIngredients": [
@@ -53,9 +49,7 @@
     ],
     "image": "https://www.bbcgoodfood.com/sites/default/files/styles/recipe/public/recipe_images/recipe-image-legacy-id--327831_11.jpg?itok=8GjuBS4F"
 }, {
-    "_id": {
-        "$oid": "5a2f152c734d1d29323545fe"
-    },
+    "_id": "5a2f152c734d1d29323545fe",
     "name": "Ceasar Salad",
     "cookingTime": "25 minutes",
     "mainIngredients": [
