@@ -12,21 +12,6 @@ const config = {
     filename: 'bundle.js',
     path: BUILD_DIR,
   },
-  resolve: {
-    root: __dirname,
-    alias: {
-      App: './src/client/components/App.jsx',
-      Recipe: './src/client/components/Recipe/Recipe.jsx',
-      RecipeListWithFilter: './src/client/components/RecipeListWithFilter/RecipeListWithFilter.jsx',
-      Routes: './src/client/components/Routes/Routes.js',
-      Home: './src/client/components/Home/Home.jsx',
-      AuthService: './src/client/services/AuthService.js',
-      HistoryService: './src/client/services/HistoryService.js',
-      RecipeService: './src/client/services/RecipeService.js',
-      Callback: './src/client/components/Callback/Callback.jsx'
-    },
-    extensions: ['', '.js', '.jsx']
-  },
   module: {
     rules: [{
         test: /(.scss|\.css)$/,
