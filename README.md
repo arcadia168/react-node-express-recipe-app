@@ -1,3 +1,10 @@
+# To use solution
+
+Run 'npm install'
+To run the server and app: 'npm start' and visit 'http://localhost:3000'
+To run client side tests: 'npm test'
+To run server side tests: 'mocha'
+
 # The challenge
 
 The application is a food / recipe application that will help users
