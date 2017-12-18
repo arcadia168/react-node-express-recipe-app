@@ -26,4 +26,23 @@ describe('Recipes', () => {
       });
   });
 
+  /*
+  * Test the /GET route for a specific recipe
+  */
+  describe('/GET a particular recipe using a given ID', () => {
+    it('it should GET the the recipe with the specified ID', (done) => {
+      chai.request(server)
+          .get('/api/recipe/5a2f150d734d1d29323545f9')
+          .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a('object');
+              res.body.should.have.property('_id');
+              res.body.should.have.property('name');
+              res.body.should.have.property('cookingTime');
+              res.body.should.have.property('image');
+            done();
+          });
+    });
+});
+
 });
