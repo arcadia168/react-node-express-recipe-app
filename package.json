@@ -13,7 +13,7 @@
     "Express",
     "kata"
   ],
-  "author": "***REMOVED*** ***REMOVED***",
+  "author": "Erin Eland",
   "license": "ISC",
   "dependencies": {
     "auth0-js": ">=9.3.0",

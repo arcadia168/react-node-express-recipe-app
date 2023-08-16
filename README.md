@@ -1,6 +1,6 @@
 # The solution
 
-See the solution running on Azure App Service: http://***REMOVED***-***REMOVED***-react-express-recipe-app.azurewebsites.net/home/
+See the solution running on Azure App Service: http://erin-eland-react-express-recipe-app.azurewebsites.net/home/
 
 Run the project locally:
 * Run 'npm install'

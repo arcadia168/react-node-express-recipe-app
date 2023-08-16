@@ -5,7 +5,7 @@ import axios from 'axios';
 class AuthService {
     constructor(axios) {
         this.auth0 = new auth0.WebAuth({
-            domain: '***REMOVED***codedemos.eu.auth0.com',
+            domain: 'erinelandcodedemos.eu.auth0.com',
             clientID: 'B5bvppKVgfaM8cj3eukBOhoShRq0eBBE',
             redirectUri: 'http://localhost:3000/callback',
             audience: 'react-node-recipes-auth-api',
