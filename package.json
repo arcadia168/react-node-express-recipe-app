@@ -28,7 +28,7 @@
     "jwks-rsa": "^1.2.1",
     "method-override": "^2.3.10",
     "mongodb": "^3.0.0-rc0",
-    "mongoose": "^4.13.6",
+    "mongoose": "^7.4.4",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-router": "^4.1.1",
